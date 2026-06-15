@@ -1,13 +1,20 @@
-output "cluster_name" {
-
-  value = azurerm_kubernetes_cluster.this.name
-
+output "id" {
+  value = azurerm_kubernetes_cluster.this.id
 }
 
-output "kube_config" {
+output "name" {
+  value = azurerm_kubernetes_cluster.this.name
+}
 
-  value     = azurerm_kubernetes_cluster.this.kube_config_raw
+output "fqdn" {
+  value = azurerm_kubernetes_cluster.this.fqdn
+}
 
-  sensitive = true
+output "node_resource_group" {
+  value = azurerm_kubernetes_cluster.this.node_resource_group
+}
 
+output "kubelet_identity_object_id" {
+  value =
+  azurerm_kubernetes_cluster.this.kubelet_identity[0].object_id
 }
