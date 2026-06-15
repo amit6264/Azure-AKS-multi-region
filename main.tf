@@ -72,6 +72,7 @@ module "acr" {
   }
 }
 
+
 module "aks" {
 
   source = "./modules/aks"
@@ -80,11 +81,36 @@ module "aks" {
 
   cluster_name = "aks-${each.key}-prod"
 
+  dns_prefix = "aks-${each.key}"
+
   location = each.value.location
 
-  resource_group_name = module.resource_groups[each.key].name
+  resource_group_name =
+  module.resource_groups[each.key].name
 
-  subnet_id = module.network[each.key].subnet_id
+  aks_subnet_id =
+  module.network[each.key].aks_subnet_id
+
+  log_analytics_workspace_id =
+  module.log_analytics.id
+
+  tags = {
+    Environment = "Production"
+    ManagedBy   = "Terraform"
+  }
+}
+
+
+resource "azurerm_role_assignment" "acr_pull" {
+
+  for_each = module.aks
+
+  principal_id =
+  each.value.kubelet_identity_object_id
+
+  role_definition_name = "AcrPull"
+
+  scope = module.acr.id
 }
 
 
