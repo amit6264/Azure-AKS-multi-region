@@ -45,6 +45,33 @@ module "network" {
   }
 }
 
+
+module "acr" {
+
+  source = "./modules/acr"
+
+  acr_name = "globalacrprod001"
+
+  resource_group_name =
+  module.shared_rg.name
+
+  location = "westeurope"
+
+  private_endpoint_subnet_id =
+  module.network["eu"].private_endpoint_subnet_id
+
+  vnet_id =
+  module.network["eu"].vnet_id
+
+  log_analytics_workspace_id =
+  module.log_analytics.id
+
+  tags = {
+    Environment = "Production"
+    ManagedBy   = "Terraform"
+  }
+}
+
 module "aks" {
 
   source = "./modules/aks"
@@ -58,4 +85,17 @@ module "aks" {
   resource_group_name = module.resource_groups[each.key].name
 
   subnet_id = module.network[each.key].subnet_id
+}
+
+
+resource "azurerm_role_assignment" "acr_pull" {
+
+  for_each = module.aks
+
+  principal_id =
+  each.value.kubelet_identity_object_id
+
+  role_definition_name = "AcrPull"
+
+  scope = module.acr.id
 }
