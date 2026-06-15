@@ -5,7 +5,14 @@ module "resource_groups" {
   for_each = var.regions
 
   name     = "rg-${each.key}-prod"
+
   location = each.value.location
+
+  tags = {
+    Environment = "Production"
+    ManagedBy   = "Terraform"
+    Platform    = "AKS"
+  }
 }
 
 module "network" {
