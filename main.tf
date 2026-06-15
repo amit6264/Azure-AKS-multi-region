@@ -99,3 +99,27 @@ resource "azurerm_role_assignment" "acr_pull" {
 
   scope = module.acr.id
 }
+
+module "keyvault" {
+
+  source = "./modules/keyvault"
+
+  keyvault_name = "kv-prod-global-001"
+
+  resource_group_name = module.shared_rg.name
+
+  location = "westeurope"
+
+  tenant_id = data.azurerm_client_config.current.tenant_id
+
+  private_endpoint_subnet_id =
+  module.network["eu"].private_endpoint_subnet_id
+
+  vnet_id =
+  module.network["eu"].vnet_id
+
+  tags = {
+    Environment = "Production"
+    ManagedBy   = "Terraform"
+  }
+}
