@@ -21,17 +21,28 @@ module "network" {
 
   for_each = var.regions
 
-  resource_group_name = module.resource_groups[each.key].name
+  resource_group_name =
+  module.resource_groups[each.key].name
 
-  location            = each.value.location
+  location = each.value.location
 
-  vnet_name           = "vnet-${each.key}"
+  vnet_name = "vnet-${each.key}"
 
-  vnet_cidr           = each.value.vnet_cidr
+  vnet_cidr = each.value.vnet_cidr
 
-  subnet_name         = "aks-subnet"
+  aks_subnet_cidr =
+  each.value.aks_subnet_cidr
 
-  subnet_cidr         = each.value.subnet_cidr
+  private_endpoint_subnet_cidr =
+  each.value.private_endpoint_subnet_cidr
+
+  firewall_subnet_cidr =
+  each.value.firewall_subnet_cidr
+
+  tags = {
+    Environment = "Production"
+    ManagedBy   = "Terraform"
+  }
 }
 
 module "aks" {
