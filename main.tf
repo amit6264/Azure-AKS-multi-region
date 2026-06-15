@@ -158,3 +158,28 @@ resource "azurerm_role_assignment" "kv_secrets_user" {
 
   principal_id = "<managed-identity-object-id>"
 }
+
+
+
+module "frontdoor" {
+
+  source = "./modules/frontdoor"
+
+  frontdoor_name = "global-frontdoor-prod"
+
+  resource_group_name =
+  module.shared_rg.name
+
+  origin_hostnames = {
+
+    eu   = "eu.company.com"
+
+    asia = "asia.company.com"
+
+    me   = "me.company.com"
+  }
+
+  tags = {
+    Environment = "Production"
+  }
+}
