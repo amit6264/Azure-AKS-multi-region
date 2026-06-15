@@ -72,7 +72,6 @@ module "acr" {
   }
 }
 
-
 module "aks" {
 
   source = "./modules/aks"
@@ -92,14 +91,13 @@ module "aks" {
   module.network[each.key].aks_subnet_id
 
   log_analytics_workspace_id =
-  module.log_analytics.id
+  module.monitoring.log_analytics_workspace_id
 
   tags = {
+
     Environment = "Production"
-    ManagedBy   = "Terraform"
   }
 }
-
 
 resource "azurerm_role_assignment" "acr_pull" {
 
@@ -181,5 +179,32 @@ module "frontdoor" {
 
   tags = {
     Environment = "Production"
+  }
+}
+
+
+module "monitoring" {
+
+  source = "./modules/monitoring"
+
+  resource_group_name =
+  module.shared_rg.name
+
+  location = "westeurope"
+
+  log_analytics_name =
+  "law-prod"
+
+  monitor_workspace_name =
+  "amw-prod"
+
+  grafana_name =
+  "grafana-prod"
+
+  tags = {
+
+    Environment = "Production"
+
+    ManagedBy = "Terraform"
   }
 }
