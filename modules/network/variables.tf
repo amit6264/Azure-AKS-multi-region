@@ -1,8 +1,32 @@
-variable "resource_group_name" {}
-variable "location" {}
+variable "resource_group_name" {
+  type = string
+}
 
-variable "vnet_name" {}
-variable "vnet_cidr" {}
+variable "location" {
+  type = string
+}
 
-variable "subnet_name" {}
-variable "subnet_cidr" {}
+variable "vnet_name" {
+  type = string
+}
+
+variable "vnet_cidr" {
+  type = string
+}
+
+variable "aks_subnet_cidr" {
+  type = string
+}
+
+variable "private_endpoint_subnet_cidr" {
+  type = string
+}
+
+variable "firewall_subnet_cidr" {
+  type = string
+}
+
+variable "tags" {
+  type    = map(string)
+  default = {}
+}
