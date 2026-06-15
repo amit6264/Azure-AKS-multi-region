@@ -64,7 +64,7 @@ module "acr" {
   module.network["eu"].vnet_id
 
   log_analytics_workspace_id =
-  module.log_analytics.id
+  module.monitoring.log_analytics_workspace_id
 
   tags = {
     Environment = "Production"
